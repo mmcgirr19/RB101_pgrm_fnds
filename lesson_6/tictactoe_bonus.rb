@@ -37,6 +37,7 @@ def display_board_key
   puts ""
 end
 
+# rubocop:disable Metrics/AbcSize
 def display_board(brd)
   puts ""
   puts "     |     |"
@@ -52,6 +53,7 @@ def display_board(brd)
   puts "     |     |"
   puts ""
 end
+# rubocop:enable Metrics/AbcSize
 
 def initialize_board
   new_board = {}
@@ -121,7 +123,6 @@ def computer_places_piece!(brd)
   square = computer_offense(brd, HUMAN_MARKER) if !square
   square = MAIN_SQUARE if !square && brd[MAIN_SQUARE] == INITIAL_MARKER
   square = empty_squares(brd).sample if !square
-  
   brd[square] = COMPUTER_MARKER
 end
 
@@ -136,7 +137,7 @@ end
 
 def find_square_threat(line, brd, marker)
   if brd.values_at(*line).count(marker) == 2
-    brd.select{|k,v| line.include?(k) && v == INITIAL_MARKER}.keys.first
+    brd.select { |k, v| line.include?(k) && v == INITIAL_MARKER }.keys.first
   end
 end
 
@@ -165,11 +166,9 @@ end
 
 def score_keep!(score, winner)
   if winner == 'Human'
-     score[:human_score] += 1
+    score[:human_score] += 1
   elsif winner == 'Computer'
     score[:computer_score] += 1
-  else
-    nil
   end
   score
 end
@@ -181,18 +180,15 @@ end
 def display_match_winner(score)
   if score[:human_score] == ROUNDS
     prompt "You are the grand champion!"
-  else score[:computer_score] == ROUNDS
+  elsif score[:computer_score] == ROUNDS
     prompt "The computer is the grand champion. You lose!"
   end
 end
 
-
 # Main Code
-
 loop do
   welcome_message
-  score = {human_score: 0, computer_score: 0}
-  decision = ''
+  score = { human_score: 0, computer_score: 0 }
   current_player = first_player
 
   loop do
@@ -212,9 +208,9 @@ loop do
       prompt "It's a tie!"
     end
 
-    prompt "The score is Human: #{score[:human_score]}, Computer: #{score[:computer_score]}."
-
     system('clear') || system('cls')
+
+    prompt "The score is Human: #{score[:human_score]}, Computer: #{score[:computer_score]}."
 
     if rounds_complete?(score)
       display_match_winner(score)
@@ -229,79 +225,3 @@ loop do
 end
 
 prompt "Thanks for playing Tic Tac Toe!"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Main Code
-
-# loop do
-#   round = 0
-#   human_score = 0
-#   computer_score = 0
-  
-#   loop do
-#     current_player = round_first_player
-
-#     board = initialize_board
-
-#     loop do
-#       display_board(board)
-#       human_places_piece!(board)
-#       break if someone_won?(board) || board_full?(board)
-#       computer_places_piece!(board)
-#       break if someone_won?(board) || board_full?(board)
-#     end
-
-#     display_board(board)
-
-#     if someone_won?(board)
-#       prompt "#{detect_winner(board)} won!"
-#     else
-#       prompt "It's a tie!"
-#     end
-
-#     loop do
-      
-#       round += 1
-#       if detect_winner(board) == 'Player'
-#          human_score += 1
-#          break if human_score == 5
-#       elsif detect_winner(board) == 'Computer'
-#         computer_score += 1
-#         break if computer_score == 5
-#       else
-#         nil
-#       end
-
-#       puts "After Round #{round}, the score is Player: #{human_score} and Computer: #{computer_score}"
-#       break
-#     end
-#     break if human_score == 5 || computer_score == 5
-#   end
-
-#     if human_score == 5
-#     puts "You are the ultimate winner!"
-#     elsif computer_score == 5
-#       puts "You are the ultimate loser :("
-#     else
-#       nil
-#     end
-
-#   prompt "Play again? (y or n)"
-#   answer = gets.chomp
-#   break unless answer.downcase.start_with?('y')
-#   prompt "Invalid answer. Please type y or n."
-# end
-
-# prompt "Thanks for playing Tic Tac Toe!"
