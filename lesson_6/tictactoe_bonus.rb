@@ -1,8 +1,6 @@
 # Lesson 6.6 Rubocop Tic Tac Toe
 
 # CONSTANTS
-require 'pry'
-
 WINNING_LINES =   [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
                   [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
                   [[1, 5, 9], [3, 5, 7]]
@@ -107,15 +105,11 @@ def human_places_piece!(brd)
   square = ''
   loop do
     prompt "Pick an open square (#{joinor_choice(empty_squares(brd))}):"
-    square = gets.chomp.to_i
-    break if empty_squares(brd).include?(square) && valid_integer?(square.to_s)
+    square = gets.chomp
+    break if empty_squares(brd).include?(square.to_i) && square.size == 1
     prompt "Sorry that is not a valid choice."
   end
-  brd[square] = HUMAN_MARKER
-end
-
-def valid_integer?(num)
-  num.to_i.to_s == num
+  brd[square.to_i] = HUMAN_MARKER
 end
 
 def computer_places_piece!(brd)
@@ -185,6 +179,14 @@ def display_match_winner(score)
   end
 end
 
+def valid_play_again?(ans)
+  if VALID_ANSWERS.include?(ans)
+    true
+  else
+    false
+  end
+end
+
 # Main Code
 loop do
   welcome_message
@@ -218,10 +220,15 @@ loop do
     end
   end
 
-  prompt "Play again? (y or n)"
-  answer = gets.chomp
-  break unless answer.downcase.start_with?('y')
-  prompt "Invalid answer. Please type y or n."
+  answer = ''
+  loop do
+    prompt "Play again? (y or n)"
+    answer = gets.chomp
+    break if valid_play_again?(answer)
+    prompt "Invalid answer. Please type y or n."
+  end
+
+  break if answer.start_with?("n")
 end
 
 prompt "Thanks for playing Tic Tac Toe!"
